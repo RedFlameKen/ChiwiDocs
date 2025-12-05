@@ -59,7 +59,8 @@ Navigate into the directory:
 cd whisper.cpp
 ```
 
-Then, download one of the Whisper [models](models/README.md) converted in [`ggml` format](#ggml-format). For example:
+Then, download one of the Whisper models converted in `ggml` format. For
+example:
 
 ```bash
 sh ./models/download-ggml-model.sh base.en
