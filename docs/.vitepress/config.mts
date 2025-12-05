@@ -4,6 +4,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "Chiwi Documentation",
   description: "Documentation for Chiwi",
+  base: '/ChiwiDocs/',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     logo: '/assets/chiwi1_updated.png',
