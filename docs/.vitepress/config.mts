@@ -6,6 +6,7 @@ export default defineConfig({
   description: "Documentation for Chiwi",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    logo: '/assets/chiwi1_updated.png',
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Guide', link: '/getting_started/getting_started' }
