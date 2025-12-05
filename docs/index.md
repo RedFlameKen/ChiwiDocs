@@ -6,7 +6,7 @@ hero:
   text: "Documentation for Chiwi"
   tagline: An AI powered reviewer
   image: 
-    src: assets/chiwi1_updated.png
+    src: images/chiwi1_updated.png
 
   actions:
     - theme: brand
