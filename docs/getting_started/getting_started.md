@@ -28,7 +28,8 @@ The server is the heart of the application. This handles all logic and data of
 the application. The **machine that will host the server should have the
 following**:
 
-* [whisper.cpp](https://github.com/ggml-org/whisper.cpp)
+* whisper.cpp's **whisper-server**:
+  [whisper.cpp](https://github.com/ggml-org/whisper.cpp)
 * A MySQL server
 * Java Development Kit (JDK)
 * The Chiwi springboot server:
@@ -42,7 +43,48 @@ The **ChiwiServer** makes use **whisper.cpp** to transcribe user voice inputs
 from the clients. Follow the instructions at
 [whisper.cpp](https://github.com/ggml-org/whisper.cpp) for building the server.
 Before running the server, ensure that you've downloaded the model for it to
-use. 
+use. For ease, here some of the instructions from whisper.cpp for "Quick
+Start":
+
+---
+First clone the repository:
+
+```bash
+git clone https://github.com/ggml-org/whisper.cpp.git
+```
+
+Navigate into the directory:
+
+```
+cd whisper.cpp
+```
+
+Then, download one of the Whisper [models](models/README.md) converted in [`ggml` format](#ggml-format). For example:
+
+```bash
+sh ./models/download-ggml-model.sh base.en
+```
+
+> [!NOTE]
+> On windows, the **models\download-ggml-model.cmd** should be used.
+
+> [!IMPORTANT]
+> On windows, the models\download-ggml-model.cmd **DOES NOT** download the file
+> into the `models` directory. Instead it downloads the model file into `%CD%`
+> which is the current directory/folder. Since the default model file to be
+> used is `models/ggml-base.en.bin`, make sure to add the option `-m
+> ggml-base.en.bin` to point to the correct model file to use when running
+> `whisper-server`.
+
+Now build like this:
+
+```bash
+# build the project
+cmake -B build
+cmake --build build -j --config Release
+```
+
+---
 
 #### MySQL
 A MySQL server must be running when using the ChiwiServer Springboot
@@ -85,12 +127,30 @@ The ChiwiServer also needs a configuration json file with the following format:
 }
 ```
 
-""
+- `database`: configurations for the MySQL database
+    - `username`: The MySQL username
+    - `password`: The MySQL password
+- `encryption`: configrations for encryption
+    - `password`: The password to be used for encrypting and decryption with
+      PBKDF2WithHmacSHA256
+- `ssl`: configurations for https
+    - `keystore-password`: the password of the keystore file
+    - `keystore-type`: Type of the keystore
+    - `keystore-alias`: alias of the keystore
+
+> [!NOTE]
+> Unfortunately, we've had issues with MySQL servers that don't have passwords.
+> So make sure your MySQL server has one.
 
 ## Running
-
+---
 ### Client
-inside the project, you may run the application with the following:
+If you don't need to run the client locally, then the deployed version is
+available at
+[redflameken.github.io/chiwi](https://redflameken.github.io/chiwi). The
+following instructions are for running the client locally.
+
+Inside the project, you may run the application with the following:
 
 if using **chrome**:
 ```
@@ -98,7 +158,7 @@ flutter run -d chrome
 ```
 This should automatically open the chiwi application in the browser. If not,
 flutter should give you a *localhost* url with a port number of where the
-project was run. For example, it gave the url `http://localhost:4216`. You
+project was run. For example, if it gave the url `http://localhost:4216`, You
 should then open that url in the browser.
 
 Optionally, you may define which port to use by adding the
@@ -116,16 +176,19 @@ to serve the application.
 
 ### Server
 
+---
 #### whisper.cpp
 Assuming you are inside the whisper.cpp project directory/folder, you may
 run to following command:
-```
-build/bin/whisper-server -m <location_of_the_model> --port 5050
-```
 
-on **Windows**:
+On **Windows**:
 ```
 build\bin\whisper-server.exe -m <location_of_the_model> --port 5050
+```
+
+On **Linux**/**Mac**:
+```
+build/bin/whisper-server -m <location_of_the_model> --port 5050
 ```
 
 > [!IMPORTANT]
@@ -133,8 +196,21 @@ build\bin\whisper-server.exe -m <location_of_the_model> --port 5050
 > hard-coded into the springboot server to use the port 5050 when requesting to
 > the whisper-server.
 
+---
 #### MySQL
 Just ensure that the server is running
 
-
+---
 #### ChiwiServer
+The ChiwiServer is built with Springboot so the only thing it needs to run is
+the JDK. But also make sure to have the prerequisites installed.
+
+To run the server in **Windows**:
+```
+.\mvnw.cmd spring-boot:run
+```
+
+To run the server in **Linux**/**Mac**:
+```
+./mvnw spring-boot:run
+```
